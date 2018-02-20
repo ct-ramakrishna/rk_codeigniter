@@ -39,6 +39,12 @@ echo isset($message_display)?$message_display:'';
 
     
 
+
+
+
+
+    
+
        ?>
       
       <div class="left-reg col-xs-12 col-sm-8 col-md-8"> 
