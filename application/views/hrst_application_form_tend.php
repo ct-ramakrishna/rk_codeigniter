@@ -48,10 +48,14 @@ echo isset($message_display)?$message_display:'';
         <!-- start-->
         <div class="form-group has-feedback">
 <<<<<<< HEAD
+<<<<<<< HEAD
           <label class="col-xs-12 col-sm-7 col-md-7 control-label">Customer Id...</label>
 =======
           <label class="col-xs-12 col-sm-7 col-md-7 control-label">Customer Id</label>
 >>>>>>> 37d938a4cce3891b6cc6ecb9a28911c3b455d431
+=======
+          <label class="col-xs-12 col-sm-7 col-md-7 control-label">Customer Id_</label>
+>>>>>>> staging
           <div class="col-xs-12 col-sm-5 col-md-5">
              <select  class="form-control" name="customer_id" onchange="getCustomer(this.value)" style="    margin-bottom: 9px;">
               <option value="">--select option--</option>
