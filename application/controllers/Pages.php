@@ -312,6 +312,7 @@ class Pages extends CI_Controller
             $post_vls['tender']=0;
             $result = $this->Hc_database->application_insert($post_vls);
             if($tender==1){
+                 $post_vls['tender']=1;
                  $post_vls['dsc']=0;
                  $result = $this->Hc_database->application_insert($post_vls);
             }
