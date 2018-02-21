@@ -2,6 +2,8 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper ">
   <?php $this->load->view('hrst_header');?>
+ 
+
   <!-- Content Wrapper. Contains page content -->
   <!-- Main content -->
   <section class="content">
