@@ -65,7 +65,7 @@ echo $error_message;
             <!-- small box -->
             <div class="small-box bg-aqua">
               <div class="inner">
-                <h3>D.S.C</h3>
+                <h3>DSC</h3>
               </div>
               <div class="icon"><i class="fa fa-cube" aria-hidden="true"></i></div>
               <a href="<?=base_url('index.php/registration_dtails/1')?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
@@ -90,34 +90,26 @@ echo $error_message;
               <div class="icon"> <i class="fa fa-search" aria-hidden="true"></i></div>
               <a href="<?=base_url('index.php/registration_dtails/search')?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
           </div>
-          <!-- ./col -->
-          <div class="col-xs-12 col-sm-4 col-md-4">
-            <!-- small box -->
+          <!-- ./col --> <!-- small box -->
+         <!--  <div class="col-xs-12 col-sm-4 col-md-4">
+           
             <div class="small-box bg-red">
               <div class="inner">
                 <h3>MAINTENANCE</h3>
               </div>
               <div class="icon"><i class="fa fa-users icon-sidebar"></i></div>
               <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
-          </div>
+          </div> -->
           <!-- ./col -->
 		   <!-- ./col -->
-          <div class="col-xs-12 col-sm-4 col-md-4">
-            <!-- small box -->
-            <div class="small-box bg-maroon">
-              <div class="inner">
-                <h3>FETCH</h3>
-              </div>
-              <div class="icon"><i class="fa fa-copy" aria-hidden="true"></i></div>
-              <a href="<?=base_url('index.php/registration_dtails')?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
-          </div>
+        
           <!-- ./col -->
 		   <!-- ./col -->
           <div class="col-xs-12 col-sm-4 col-md-4">
             <!-- small box -->
             <div class="small-box bg-purple">
               <div class="inner">
-                <h3>ACCOUNTS</h3>
+                <h3>CUSTOMER JOB</h3>
               </div>
               <div class="icon"><i class="fa fa-book" aria-hidden="true"></i></div>
               <a href="<?=base_url('index.php/application_form_tend')?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
@@ -133,6 +125,22 @@ echo $error_message;
               <div class="icon"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
               <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
           </div>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+            <!-- small box -->
+            <div class="small-box bg-teal">
+              <div class="inner">
+                <h3>MY JOBS</h3>
+              </div>
+              <?php
+                        $this->db->select('id');
+                        $this->db->from('subscription_forms');
+                        $this->db->where('assign_to='.$this->session->userdata['logged_in']['userid']);
+                        $query = $this->db->get();
+                        
+              ?>
+              <div class="icon"><i  aria-hidden="true"><?=$query->num_rows()?></i></div>
+              <a href="<?=base_url('index.php/my_jobs')?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
+          </div>
           <!-- ./col -->
         </div>
       </section>
@@ -140,6 +148,7 @@ echo $error_message;
       <!-- form start -->
       <!-- /.content -->
     </div>
+ \
   </section>
 </div>
 <!-- /.content-wrapper -->

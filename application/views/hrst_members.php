@@ -41,16 +41,14 @@ function getValid($val){
 // $obj->data['table']='user_login';
 foreach ($result as $row) {
 
-$user_rights=str_replace("1", 'DSC', $row->user_rights);
-$user_rights=str_replace("2", 'Tender', $user_rights);
-$user_rights=str_replace("#", ',', $user_rights);
+
 
   
 
    
     $dtls.="<td>".getValid($row->id)."</td>";
     $dtls.="<td>".getValid($row->user_name)."</td>";
-    $dtls.="<td>".getValid($row->user_email)."</td><td>".$user_rights."</td>";
+    $dtls.="<td>".getValid($row->user_email)."</td><td>".($row->tender?'Tender,':'').($row->dsc?'DS,':'').($row->member_register?'Member Register':'')."</td>";
    
      $dtls.="<td>".getValid((int)$row->added?$row->added:'')."</td>";
 $dtls.="<td>".getValid((int)$row->updated?$row->updated:'')."</td>";

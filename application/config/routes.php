@@ -75,6 +75,8 @@ $route['application_form_tend'] = 'pages/application_form_tend';
 $route['registration_dtails/(.*)'] = 'pages/registrationdtails';
 $route['registration_dtails'] = 'pages/registrationdtails';
 $route['users_show'] = 'pages/users_show';
+$route['my_jobs'] = 'pages/my_jobs';
+$route['job_assign'] = 'pages/job_assign';
 
 
 $route['login'] = 'user_authentication';

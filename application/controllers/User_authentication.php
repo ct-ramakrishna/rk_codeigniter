@@ -78,7 +78,11 @@ $session_data = array(
 'userid' => $result[0]->id,
 'username' => $result[0]->user_name,
 'email' => $result[0]->user_email,
-'user_rights' => $result[0]->user_rights,
+'tender' => $result[0]->tender,
+'dsc' => $result[0]->dsc,
+'member_register' => $result[0]->member_register,
+'job_assign' => $result[0]->job_assign,
+'customer_account' => $result[0]->customer_account,
 );
 // Add user data in session
 $this->session->set_userdata('logged_in', $session_data);

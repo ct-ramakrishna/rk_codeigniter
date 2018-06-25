@@ -374,7 +374,6 @@ class CI_Upload {
 	public function do_upload($field = 'userfile',$filename='')
 	{
 		// Is $_FILES[$field] set? If not, no reason to continue.
-		//echo '<pre>';print_r($_FILES);exit;
 		if (isset($_FILES[$field]))
 		{
 			$_file = $_FILES[$field];
@@ -395,11 +394,9 @@ class CI_Upload {
 				$_file = $_file[$field];
 			}
 		}
-		
-		
+
 		if ( ! isset($_file))
 		{
-
 			$this->set_error('upload_no_file_selected', 'debug');
 			return FALSE;
 		}

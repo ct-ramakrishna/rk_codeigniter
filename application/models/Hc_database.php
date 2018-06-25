@@ -20,7 +20,6 @@ $this->db->limit(1);
 $query = $this->db->get();
 if ($query->num_rows() == 0) {
 
-$data['user_rights']=$data['user_rights']?implode("#",$data['user_rights']):'';
 if(isset($data['user_id'])){
 	// Query to insert data in database
 
@@ -67,6 +66,47 @@ public function application_update($data) {
 	$this->db->insert('subscription_forms_log', $data);
 	return true;
 }
+public function customer_jobs_insert($data) {
+
+// Query to insert data in database
+
+$this->db->insert('customer_jobs', $data);
+	if ($this->db->affected_rows() > 0) {
+$this->subscription_id=$this->db->insert_id();
+$this->db->insert('customer_jobs_log', $data);
+		return true;
+	}else{
+		return false;
+	}
+}
+public function customer_jobs_update($data) {
+
+// Query to insert data in database
+
+	$this->db->where('id', $data['job_id']);
+
+	 unset($data['job_id']);
+	$this->db->update('customer_jobs', $data);
+	$this->db->insert('customer_jobs_log', $data);
+	return true;
+}
+
+public function application_renewed_insert($data) {
+
+// Query to insert data in database
+unset($data['form_id']);
+$this->db->insert('subscription_forms_renewed', $data);
+	if ($this->db->affected_rows() > 0) {
+$this->subscription_id=$this->db->insert_id();
+$this->db->insert('subscription_forms_log', $data);
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+
 public function application_doc_insert($data) {
 
 // Query to insert data in database
@@ -120,8 +160,26 @@ return false;
 }
 }
 // Read data from database to show data in admin page
+public function record_count($data) {
+	$condition='';
+	if(isset($data['w_clse']['search_key'])){
+		  $condition = " customer_id =" . "'" . $data['w_clse']['search_key'] . "' or name =" . "'" . $data['w_clse']['search_key'] . "' or city =" . "'" . $data['w_clse']['search_key'] . "'";
+		  $this->db->where($condition);
+}
+if(isset($data['w_clse']['dsc'])){
+		  $condition = " dsc =" . "'" . $data['w_clse']['dsc'] . "'";
+		  $this->db->where($condition);
+}
+if(isset($data['w_clse']['tender'])){
+		  $condition = " tender =" . "'" . $data['w_clse']['tender'] . "'";
+		  $this->db->where($condition);
+}
+	
+ return  $this->db->from($data['table'])->count_all_results();
+}
+
 public function read_info($data) {
-$condition='';
+$condition=$order_by='';
 if($data['flds']){
 	$flds=implode(",",$data['flds']);
 }
@@ -140,9 +198,17 @@ if(isset($data['w_clse']['tender'])){
 if(isset($data['w_clse']['dsc'])){
 		  $condition = " dsc =" . "'" . $data['w_clse']['dsc'] . "'";
 }
-
+if(isset($data['w_clse']['customer_id'])){
+		  $condition = " customer_id =" . "'" . $data['w_clse']['customer_id'] . "'";
+}
+if(isset($data['w_clse']['search_key'])){
+		  $condition = " customer_id  like " . "'%" . $data['w_clse']['search_key'] . "%'or name like " . "'%" . $data['w_clse']['search_key'] . "%' or city like" . "'%" . $data['w_clse']['search_key'] . "%'";
+}
 if(isset($data['limit']) && $data['limit']){
 	 $limit=$data['limit'];
+}
+if(isset($data['order_by']) && $data['order_by']){
+	 $order_by=$data['order_by'];
 }
 if(isset($data['start']) && $data['start']){
 	  $start=$data['start'];
@@ -151,10 +217,13 @@ if(isset($data['start']) && $data['start']){
 $this->db->select($flds);
 $this->db->from($data['table']);
 
+
 if($condition){
 	$this->db->where($condition);	
 }
-
+if($order_by){
+	$this->db->order_by($order_by,'desc');	
+}
 	
 if(isset($start)){
 	//echo 'working';
@@ -163,10 +232,11 @@ if(isset($start)){
 	//echo 'test';
 	$this->db->limit($limit);
 }
+
 	
 	// $this->db->limit($limit);
 
-
+// $this->output->enable_profiler(TRUE) ;
 // $this->db->limit(1);
 $query = $this->db->get();
 //echo $query->num_rows();

@@ -34,6 +34,10 @@
     color: red;
 
    }
+   .current{
+    background-color: #eee !important;
+   }
+
 
   </style>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -82,19 +86,6 @@ echo isset($message_display)?$message_display:'';
 
 // $j=1;
 
-function getValid($val){
-
-    if($val!='' && $val!='0'){
-
-      return $val;
-
-    }else{
-
-      return '';
-
-    }
-
-}
 
 
 // $obj->data['flds']=['customer_id','name','state','city','mobile','added','form_type','id','updated'];
@@ -104,6 +95,7 @@ function getValid($val){
 
 // $results=isset($result)?$result:$obj->getReqdtails();
 $j=1;$dtls='';
+$result=isset($result)?$result:[];
 foreach ((array)$result as $row) {
 
 if($row){
@@ -116,29 +108,32 @@ if($row){
 
     $dtls.="<td>".getValid($row->name)."</td>";
 
-    $dtls.="<td>".getValid($row->state)."</td>";
+    // $dtls.="<td>".getValid($row->state)."</td>";
 
     $dtls.="<td>".getValid($row->city)."</td>";
 
     $dtls.="<td>".getValid($row->mobile)."</td>";
+     $dtls.="<td>".(getValid($row->renewal)?'Yes':'No')."</td>";
 
     $dtls.="<td>".((int)$row->added?getValid($row->added):'')."</td>";
 
-    $dtls.="<td>".((int)$row->updated?getValid($row->updated):'')."</td>";
+   // $dtls.="<td>".((int)$row->updated?getValid($row->updated):'')."</td>";
 
-    $dtls.="<td><a href='".site_url('pages/update_reg')."/".$row->id."'>Update</a></td></tr>";
+    $dtls.="<td><a href='javascript:void(0);' onclick='getView(".$row->id.")'>View</a>&nbsp;<a href='".site_url('pages/update_reg')."/".$row->id."'>Update</a></td></tr>";
 }
 
 
 }
 
-if($this->uri->segment(2)=='search' || $this->uri->segment(2)=='getSearchReg'){
+// if($this->uri->segment(2)=='search' || $this->uri->segment(2)=='getSearchReg'){}
+
+
   
    echo form_open_multipart('pages/getSearchReg'); ?>
      <div class="form_group" style="
     margin: 12px;
 ">
-      <input type="" name="search_key" placeholder="Customer Id/Name" value="<?=$this->input->post('search_key');?>" class="form-control" style="
+      <input type="" name="search_key" placeholder="Customer Id/Name/City" value="<?=$this->input->post('search_key');?>" class="form-control" style="
     float: left;
     width: 23%;
     margin-right: 29px;
@@ -150,9 +145,20 @@ if($this->uri->segment(2)=='search' || $this->uri->segment(2)=='getSearchReg'){
      
       <?php echo form_close(); 
   
-}
+
       //echo $links;
+?>
+<div id="pagination" style="text-align: right;">
+<ul class="pagination pagination-sm" style="    margin-top: 4px;
+    margin-bottom: 2px;">
+<?php
+$links=isset($links)?$links:[];
+ foreach ((array)$links as $link) {
+echo "<li>". $link."</li>";
+} 
      ?>
+   </ul>
+ </div>
 <div class="table-responsive">
     <table class="table table-striped table-bordered table-hover table-condensed">
         <tr>
@@ -160,11 +166,12 @@ if($this->uri->segment(2)=='search' || $this->uri->segment(2)=='getSearchReg'){
           <th>Form Type</th>
           <th>Customer Id</th>
           <th>Name</th>
-          <th>State</th>
+       <!--    <th>State</th> -->
           <th>City</th>
           <th>Mobile</th>
+          <th>Renewal</th>
           <th>Date</th>
-          <th>Updated</th>
+       <!--    <th>Updated</th> -->
           <th>Action</th>
         </tr>
         <tbody>
@@ -185,4 +192,108 @@ if($this->uri->segment(2)=='search' || $this->uri->segment(2)=='getSearchReg'){
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <!-- AdminLTE for demo purposes -->
 </body>
+<script type="text/javascript">
+  function getView(id){
+       $.ajax({
+        // Your server script to process the upload
+        url:"<?php echo base_url(); ?>" + "index.php/pages/getCustomer_1",
+        type: 'POST',
+        data:  {'id':id},
+        cache: false,
+        success:function(data){
+         // console.log(data);
+         data=JSON.parse(data);
+          var tr='';
+          jQuery.each(data['view'],function(k,v){
+
+                tr+="<tr><td>"+k+"</td><td>"+v+"</td></tr>";    
+          })
+          console.log(tr);
+          jQuery("#view_customer").text("");
+          jQuery("#view_customer").append(tr);
+          modal.style.display = "block";
+               
+          }
+       });   
+  }
+</script>
+
+<!-- Trigger/Open The Modal -->
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <table id="view_customer" class="table">
+    
+    </table>
+  </div>
+
+</div>
+<style type="text/css">
+  /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 37%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+<script type="text/javascript">
+  // Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
 </html>

@@ -1,7 +1,11 @@
 <?php $this->load->view('hrst_common_header');?>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper ">
-  <?php $this->load->view('hrst_header');?>
+  <?php $this->load->view('hrst_header');
+
+
+
+  ?>
   <!-- Content Wrapper. Contains page content -->
   <!-- Main content -->
  
@@ -26,26 +30,50 @@ echo $error_message;
       <?php echo form_open_multipart('pages/new_application','id="form_app"'); 
 
        $disable_type=$this->uri->segment(3)?'disabled':'';
-function unq() { 
+if(!function_exists('unq')){
+  function unq() { 
     $s = strtoupper(md5(uniqid(rand(),true))); 
     $guidText = substr($s,12,4);
     return $guidText;
 }
+}
+
 // End Generate Guid 
-
 $unq = unq();
-
+ // print_r($creds);
        ?>
       <div class="left-reg col-xs-12 col-sm-8 col-md-8"> 
-       
+        
+        <?php if(($this->session->userdata['logged_in']['tender'] || $this->session->userdata['logged_in']['userid']==1 )){ }?>
          <div class="form-group has-feedback">
-       <label class="col-xs-12 col-sm-4 col-md-4 control-label" >Tender</label>
+       <label class="col-xs-12 col-sm-4 col-md-4 control-label" ></label>
           <div class="col-xs-12 col-sm-8 col-md-8">
-            
-                <input class="form-control" value="1"  type="checkbox" name="tender" <?=isset($dtls->id)?'disabled':''?>>
-                
+            <?php if(isset($dtls->dsc) && $dtls->dsc){echo '<input type="hidden" name="dsc_exist" value=1 >';}
+            if(isset($dtls->tender) && $dtls->tender){echo '<input type="hidden" name="tender_exist" value=1 >';}?>
+               <?php if(!isset($dtls->form_type) || (isset($dtls->form_type) && $dtls->form_type!=2)){?>
+                <input class="form-control" value="1"  type="checkbox" name="dsc" <?=isset($dtls->dsc) && $dtls->dsc?'disabled  checked':''?>>
+                  DSC
+                  &nbsp;&nbsp;
+                  <input class="form-control" value="1"  type="checkbox" name="tender" <?=isset($dtls->tender) && $dtls->tender?'disabled checked':''?>>
+                  Tender
+                  <?php }?>
+                 <?php if(isset($dtls->dsc) && $dtls->dsc){?>
+                   &nbsp;&nbsp;
+                   <input class="form-control" value="1"  type="checkbox" name="renewal" <?=isset($dtls->renewal) && $dtls->renewal?'disabled checked':''?> >
+                   Renewal
+                   <?php }?>
             </div>
         </div>
+        <?php  if(isset($dtls->id) &&  $dtls->id){ }?>
+       <!--   <div class="form-group has-feedback">
+       <label class="col-xs-12 col-sm-4 col-md-4 control-label" >Renewal</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            
+                <input class="form-control" value="1"  type="checkbox" name="renewal" <?=isset($dtls->renewal)&& $dtls->renewal?'disabled':''?> >
+                
+            </div>
+        </div> -->
+     
         <div class="form-group has-feedback">
           <label class="col-xs-12 col-sm-4 col-md-4 control-label" >Customer Id</label>
           <div class="col-xs-12 col-sm-8 col-md-8">
@@ -91,23 +119,98 @@ $class_signs=[
 6=>'2.8 RCAI Class 3 for Individual with Organisation Name - Encryption 2 Years Validity'
          ];
             ?>
-            <select class="form-control " name="class_encypt">
+            <select class="form-control " name="class_encrypt">
               <option value="">--select option--</option>
                       <?php 
                        foreach ($class_encrypts as $key => $value) {
-                         echo '<option value="'.$key.'" '.($key==$dtls->class_encypt?'selected':'').'>'.$value.'</option>';
+                         echo '<option value="'.$key.'" '.($key==$dtls->class_encrypt?'selected':'').'>'.$value.'</option>';
                        }
                       ?>
                       
             </select>
-            <span class="er_vld" id="er_class_encypt">
+            <span class="er_vld" id="er_class_encrypt">
             </span> </div>
         </div>
+         <div class="form-group has-feedback">
+       
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Request Id 1</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value="" name="request_id_1" id="request_id_1" type="text">
+            <span class="er_vld" id="er_request_id">
+            </span> </div>
+      
+      
+      </div>
+      
+        <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Request Id 2</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value="" name="request_id_2" id="request_id_2" type="text">
+            <span class="er_vld" id="er_request_id">
+            </span> </div>
+      
+       
+      </div>
         <div class="form-group has-feedback">
           <label class="col-xs-12 col-sm-4 col-md-4 control-label">Name</label>
           <div class="col-xs-12 col-sm-8 col-md-8">
             <input class="form-control" value=""  type="text" name="name">
             <span class="er_vld" id="er_name">
+            </span> </div>
+        </div>
+        <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Organization</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <select class="form-control " name="org_type">
+            <option value="">--select Organization--</option>
+            <option value="1" <?=isset($dtls->org_type) && $dtls->org_type==1?'selected':''?> >Individual</option>
+            <option value="2" <?=isset($dtls->org_type) && $dtls->org_type==2?'selected':''?> >Proprietorship</option>
+            <option value="3" <?=isset($dtls->org_type) && $dtls->org_type==3?'selected':''?> >Partnership</option>
+            <option value="4" <?=isset($dtls->org_type) && $dtls->org_type==4?'selected':''?> >Pvt.Ltd</option>
+            </select>
+            <span class="er_vld" id="er_org_type">
+            </span> </div>
+        </div>
+         <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Organization Name</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value=""  type="text" name="org_name">
+            <span class="er_vld" id="er_org_name">
+            </span> </div>
+        </div>
+         <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Org. PAN</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value=""  type="text" name="org_pan">
+            <span class="er_vld" id="er_org_pan">
+            </span> </div>
+        </div>
+         <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Designation</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value=""  type="text" name="designation">
+            <span class="er_vld" id="er_designation">
+            </span> </div>
+        </div>
+         <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Token</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <select class="form-control " name="token_type">
+
+            <option value="">--select Token--</option>
+            <option value="1" <?=isset($dtls->token_type) && $dtls->token_type==1?'selected':''?>>Renewal</option>
+            <option value="2" <?=isset($dtls->token_type) && $dtls->token_type==2?'selected':''?>>E-pass</option>
+            <option value="3" <?=isset($dtls->token_type) && $dtls->token_type==3?'selected':''?>>E-token</option>
+            <option value="4" <?=isset($dtls->token_type) && $dtls->token_type==4?'selected':''?>>Safe net</option>
+            </select>
+            <span class="er_vld" id="er_token_type">
+            </span> </div>
+        </div>
+           <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Token Password</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value=""  type="password" name="token_pass"><a href="javascript:void(0)" onclick="getView_pass()">view</a>
+            <span class="er_vld" id="er_token_pass">
             </span> </div>
         </div>
         <div class="form-group has-feedback">
@@ -125,9 +228,10 @@ $class_signs=[
               <div class="col-xs-12 col-sm-6 col-md-6">
                 <label class="control-label">Gender</label>
                 : Male
-                <input class="form-control" value="1"  type="checkbox" name="gender">
+                <input class="form-control" value="1"  type="radio" name="gender"  <?=isset($dtls->gender) && $dtls->gender==1?'checked':''?>>
                 Female
-                <input class="form-control" value="2"  type="checkbox" name="gender">
+                <input class="form-control" value="2"  type="radio" name="gender" <?=isset($dtls->gender) && $dtls->gender==2?'checked':''?>>
+                <span class="er_vld" id="er_gender">
               </div>
             </div>
           </div>
@@ -320,6 +424,25 @@ $country=["IND"=>'India',
             </span> </div>
         </div>
          <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">GST</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+            <input class="form-control" value=""  type="text" name="gst">
+            <span class="er_vld" id="er_gst">
+            </span> </div>
+        </div>
+           <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Expiry Date</label>
+          <div class="col-xs-12 col-sm-8 col-md-8">
+             <div class="input-group date">
+                  <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                  <input type="text" class="form-control pull-right" id="dt_pkr_expiry" name="expiry_date">
+                   </div>
+                   <span class="er_vld" id="er_expiry_date">
+                  </span>
+          
+          </div>
+        </div>
+         <div class="form-group has-feedback">
           <label class="col-xs-12 col-sm-4 col-md-4 control-label">PAN</label>
           <div class="col-xs-12 col-sm-8 col-md-8">
             <input class="form-control" value=""  type="text" name="pan">
@@ -358,29 +481,66 @@ $country=["IND"=>'India',
             <span class="er_vld" id="er_aadhar_no">
             </span> </div>
         </div>
-      </div>
-      <div class="right-reg col-xs-12 col-sm-4 col-md-4">
+        <?php if(isset($dtls->tender) && $dtls->tender==1 ){?>
         <div class="form-group has-feedback">
-          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Request Id 1</label>
-          <div class="col-xs-12 col-sm-8 col-md-8">
-            <input class="form-control" value="" name="request_id_1" id="request_id_1" type="text">
-            <span class="er_vld" id="er_request_id">
-            </span> </div>
-      
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Credentials</label>
+              <p id="tender_creds" style="float:left;">
+              <input type="text" name="tender_username[]" placeholder="Username" class="" />
+              <input type="text" name="tender_password[]" placeholder="Password" class="" />   
+              <a href="javascript:void(0);"  onclick="addMore_creds()" class="btn_add">+</a>
+              </p>
         </div>
-      </div>
-       <div class="right-reg col-xs-12 col-sm-4 col-md-4">
-        <div class="form-group has-feedback">
-          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Request Id 2</label>
-          <div class="col-xs-12 col-sm-8 col-md-8">
-            <input class="form-control" value="" name="request_id_2" id="request_id_2" type="text">
-            <span class="er_vld" id="er_request_id">
-            </span> </div>
-      
+        <?php }else{
+
+          ?>
+             <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Amount</label>
+          <div class="col-xs-12 col-sm-5 col-md-8">
+            <input type="text" class="form-control" name="dsc_amount" onkeyup="getamount_(this.value)"/>
+            <span class="er_vld" id="er_amount">
+            </span> 
+          </div>
         </div>
+
+ <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Paid</label>
+          <div class="col-xs-12 col-sm-5 col-md-8">
+            <input type="text" class="form-control" name="dsc_paid" onkeyup="getamount_(this.value)"/>
+            <span class="er_vld" id="er_paid">
+            </span> 
+          </div>
+        </div>
+
+ <div class="form-group has-feedback">
+          <label class="col-xs-12 col-sm-4 col-md-4 control-label">Unpaid</label>
+          <div class="col-xs-12 col-sm-5 col-md-8">
+            <input type="text" class="form-control" name="dsc_unpaid" readonly />
+            <span class="er_vld" id="er_unpaid">
+            </span> 
+          </div>
+        
+       
       </div>
+    <?php
+        }
+                
+          ?>
+     
       <div class="con-tent">
          <script type="text/javascript">
+            var cred=1;
+        function addMore_creds(){
+             jQuery("#tender_creds").append('</p><p id="'+cred+'"><input type="text" name="tender_username[]" style="    margin-right: 4px;" placeholder="Username"/><input type="text" name="tender_password[]" style="    margin-right: 4px;" placeholder="Password"/><a href="javascript:void(0);"  onclick="remvoe_creds('+cred+')" class="btn_add">-</a></p>');
+             cred++;
+        }
+        function remvoe_creds(id){
+             jQuery("#"+id).remove();
+             cred--;
+        }
+function getView_pass(){
+       jQuery("input[name='token_pass']").prop("type",'text');
+}
+
 
   var added=1;
  function addMore(){
@@ -441,7 +601,7 @@ $country=["IND"=>'India',
  </script>
        
           <div class="require-doc">
-            <h3>Required Doc For Contractors In Registration</h3>
+            <h4>Required Doc For Contractors In Registration</h4>
             <p id="docs" class="form-group">
              <input type="text" name="doc_types[doc_0]" class="doc_types form-control" id='0' />
                <input type="file" value="Upload" data-value="Upload" data-text="Image Name" name="doc_0"   class="doc_names" id="doc_0"/>
@@ -469,19 +629,7 @@ $avail_docs='';
 
 $j=1;
 
-function getValid($val){
 
-    if($val!='' && $val!='0'){
-
-      return $val;
-
-    }else{
-
-      return '';
-
-    }
-
-}
 
 
 
@@ -497,15 +645,22 @@ foreach ((array)$dtls_docs as $row) {
     $avail_docs.="<td>".getValid($row->doc_type)."</td>";
 
 
-    $avail_docs.="<td><a href='".base_url('uploads/')."/".$row->doc_name."'>Download</a></td></tr>";
+    $avail_docs.="<td><a href='".base_url('uploads/')."/".$row->doc_name."' target='_blank'>Download</a></td></tr>";
 
     }
 
 
 }  
 }
-
-
+$m=1;
+$avail_creds='';
+if(isset($creds) && !empty($creds)){
+   foreach ($creds as $key => $value) {
+          $avail_creds.= '<tr><td>'.($m++).'</td><td>'.$value['customer_id'].'</td>
+          <td>'.$value['username'].'</td>
+          <td>'.$value['password'].'</td></tr>';
+ }
+}
 
       ?>
       <table class="table">
@@ -519,6 +674,23 @@ foreach ((array)$dtls_docs as $row) {
         <?=$avail_docs?>
       </table>
          </div>
+
+<?php if(isset($dtls->tender) && $dtls->tender==1){?>
+         <div>
+          Credentials
+            <table class="table">
+        <tr>
+          <th>S.No</th>
+          
+          <th>Customer Id</th>
+          <th>Username</th>
+          <th>Password</th>
+        </tr>
+        <?=$avail_creds?>
+      </table>
+         </div>
+ <?php }?>
+
           </div>
         </div>
       </div>  </section>
@@ -572,6 +744,10 @@ foreach ((array)$dtls_docs as $row) {
 <script src="<?=base_url()?>dist/js/demo.js"></script>
 <!-- Page script -->
 <script>
+   function getamount_(value){
+               var unpaid=jQuery("input[name='dsc_amount']").val()-jQuery("input[name='dsc_paid']").val();
+               jQuery("input[name='dsc_unpaid']").val(unpaid);
+        }
   $(function () {
     //Initialize Select2 Elements
     $(".select2").select2();
@@ -608,6 +784,9 @@ foreach ((array)$dtls_docs as $row) {
 
     //Date picker
  $('#dt_pkr_dob').datepicker({
+      autoclose: true
+    });
+  $('#dt_pkr_expiry').datepicker({
       autoclose: true
     });
     $('.form_type').on('ifChecked', function(event){
@@ -664,39 +843,39 @@ foreach ((array)$dtls_docs as $row) {
     
 
 var input_vals='<?=isset($dtls)?json_encode($dtls):''?>';
-var input_vals_docs='<?=isset($dtls_docs)?json_encode($dtls_docs):''?>';
+// var input_vals_docs='<?=isset($dtls_docs)?json_encode($dtls_docs):''?>';
 
 
 input_vals=input_vals?JSON.parse(input_vals):'';
-input_vals_docs=input_vals_docs?JSON.parse(input_vals_docs):'';
+// input_vals_docs=input_vals_docs?JSON.parse(input_vals_docs):'';
   console.log(input_vals);
 
 jQuery.each(input_vals,function(k,v){
 
-  if(k=='dob'){
+  if(k=='dob' || k=='expiry_date'){
   var dateAr = v.split('-');
   var v = dateAr[2] + '-' + dateAr[1] + '-' + dateAr[0];
   console.log(v);
    }
-  if(k=='gender' || k=='tender'){
-    console.log(k+v);
-    if(v==1)
-    jQuery("input[name="+k+"]").first().attr('checked',true);
-  else
-    jQuery("input[name="+k+"]").next().attr('checked',true);
+  if(k=='gender' || k=='dsc' || k=='tender' || k=='renewal'){
+  //   console.log(k+v);
+  //   if(v==1)
+  //   jQuery("input[name="+k+"]").first().attr('checked',true);
+  // else
+  //   jQuery("input[name="+k+"]").next().attr('checked',true);
   }
    else{
     jQuery("input[name="+k+"]").val(v);
   }
        
 })
-console.log(input_vals_docs);
-jQuery.each(input_vals_docs,function(k,v){
- console.log(v['doc_type']);
-  // jQuery("#"+v['doc_type']).text(v['doc_name']);
-//addMore();
+// console.log(input_vals_docs);
+// jQuery.each(input_vals_docs,function(k,v){
+//  console.log(v['doc_type']);
+//   // jQuery("#"+v['doc_type']).text(v['doc_name']);
+// //addMore();
 
-});
+// });
     </script>
 <!--inputupload code-->
 </html>

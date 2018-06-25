@@ -1,4 +1,6 @@
-<?php $this->load->view('hrst_common_header');
+<?php 
+
+$this->load->view('hrst_common_header');
 
 function getFormerror($erval){
 
@@ -89,6 +91,9 @@ echo $error_message;
       <!-- /.box-header -->
       <!-- form start -->
       <div >
+
+
+
         <?php
 
 
@@ -202,28 +207,33 @@ $data = array(
             <!-- start-->
 
                 <?php
-   $ds=$trading='';
-         if(isset($dtails->user_rights)){
+                $ds=$tender=$member_register=$job_assign=$customer_account=0;
+                            if(isset($dtails->dsc) && $dtails->dsc==1){
 
-        
+                            $ds="checked";
 
-              foreach((array)explode("#", $dtails->user_rights) as $value){
+                            }
 
-                       if($value==1){
+                            if(isset($dtails->tender) && $dtails->tender==1){
 
-                        $ds="checked";
+                            $tender="checked";
 
-                       }
+                            }
+                            if(isset($dtails->member_register) && $dtails->member_register==1){
 
-                       if($value==2){
+                            $member_register="checked";
 
-                        $trading="checked";
+                            }
+                             if(isset($dtails->job_assign) && $dtails->job_assign==1){
 
-                      }
+                            $job_assign="checked";
 
-              }
+                            }
+                             if(isset($dtails->customer_account) && $dtails->customer_account==1){
 
-         }
+                            $customer_account="checked";
+
+                            }
 
                   ?>
                
@@ -236,11 +246,19 @@ $data = array(
                   <div class="col-xs-8">
                     <div class="checkbox icheck">
                       <label>
-                      <input type="checkbox" name="user_rights[]" value=1 <?=$ds?>>
-                      DS </label>
+                      <input type="checkbox" name="ds" value=1 <?=$ds?>>
+                      DS </label> <br>
                       <label>
-                      <input type="checkbox" name="user_rights[]" value=2 <?=$trading?>>
-                      Trading </label>
+                      <input type="checkbox" name="tender" value=1 <?=$tender?>>
+                      Tender </label><br>
+                      <label>  <input type="checkbox" name="member_register" value=1 <?=$member_register?>>
+                      Member Register </label>
+                      <br>
+                      <label>  <input type="checkbox" name="job_assign" value=1 <?=$job_assign?>>
+                      Job Assign </label>
+                          <br>
+                      <label>  <input type="checkbox" name="customer_account" value=1 <?=$customer_account?>>
+                      Customer Account </label>
                     </div>
                   </div>
                   <!-- /.col -->
@@ -257,7 +275,7 @@ $data = array(
 
 'placeholder'=>'Password',
 
-'value'=>'Sign Up'
+'value'=>'Save'
 
 );
 
